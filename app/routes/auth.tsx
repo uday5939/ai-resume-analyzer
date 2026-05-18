@@ -19,14 +19,14 @@ const location = useLocation();
 const navigate = useNavigate();
 
 
-const next =
-  new URLSearchParams(location.search).get("next") || "/";
-
+const next = new URLSearchParams(location.search).get("next") || "/upload";
 useEffect(() => {
-  if (auth.isAuthenticated) {
+  if (!isLoading && auth.isAuthenticated) {
     navigate(next);
   }
-}, [auth.isAuthenticated, next,navigate])
+}, [isLoading, auth.isAuthenticated, next, navigate]);
+
+
 
 
 

@@ -96,8 +96,10 @@ interface PuterStore {
   clearError: () => void;
 }
 
-const getPuter = (): typeof window.puter | null =>
-  typeof window !== "undefined" && window.puter ? window.puter : null;
+const getPuter = () => {
+  if (typeof window === "undefined") return null;
+  return window.puter || null;
+};
 
 export const usePuterStore = create<PuterStore>((set, get) => {
   const setError = (msg: string) => {
