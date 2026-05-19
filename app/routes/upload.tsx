@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import FileUploader from "~/components/FileUploader";
 import Navbar from "~/components/Navbar";
 import { usePuterStore } from "~/lib/puter";
@@ -7,6 +8,7 @@ import { convertPdfToImage } from "~/lib/pdf2img";
 
 const Upload = () => {
   const { fs, kv } = usePuterStore();
+  const navigate = useNavigate();
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [statusText, setStatusText] = useState("");
@@ -107,6 +109,8 @@ const Upload = () => {
 
       setStatusText("Analysis complete, redirecting...");
       console.log(data);
+
+      navigate(`/resume/${uuid}`);
     } catch (error) {
       console.error(error);
       setStatusText("Error: Something went wrong. Check console.");
