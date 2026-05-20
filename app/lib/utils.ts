@@ -1,3 +1,13 @@
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+/**
+ * Merge Tailwind classes
+ */
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
 /**
  * Formats a file size in bytes to a human-readable string
  */
@@ -7,10 +17,8 @@ export function formatSize(bytes: number): string {
   const k = 1024;
   const sizes: string[] = ["Bytes", "KB", "MB", "GB", "TB"];
 
-  // Determine appropriate unit
   const i: number = Math.floor(Math.log(bytes) / Math.log(k));
 
-  // Format to 2 decimal places
   return (
     parseFloat((bytes / Math.pow(k, i)).toFixed(2)) +
     " " +

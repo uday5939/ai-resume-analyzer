@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { usePuterStore } from "~/lib/puter";
 import type { Route } from "./+types/resume";
-import Summary from "~/components/Summary";
-import ATS from "~/components/ATS";
-import Details from "~/components/Details";
-import type { Feedback } from "~/types";
+import Summary from "../components/Summary";
+import ATS from "../components/ATS";
+import Details from "../components/Details";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -24,19 +23,21 @@ const Resume = () => {
 
   const [imageUrl, setImageUrl] = useState("");
   const [resumeUrl, setResumeUrl] = useState("");
-  const [feedback, setFeedback] = useState<Feedback | null>(null);
+  const [feedback, setFeedback] = useState<any>(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoading && !auth.isAuthenticated) {
+    if (!isLoading && !auth.isAuthenticated && id) {
       navigate(`/auth?next=/resume/${id}`);
     }
-  }, [isLoading]);
+  }, [isLoading, auth.isAuthenticated, id, navigate]);
 
   useEffect(() => {
     const loadResume = async (): Promise<void> => {
       if (!id) return;
+      if (isLoading) return;
+      if (!auth.isAuthenticated) return;
 
       const resume = await kv.get(`resume:${id}`);
 
@@ -74,7 +75,7 @@ const Resume = () => {
     };
 
     loadResume();
-  }, [id]);
+  }, [id, isLoading, auth.isAuthenticated, fs, kv]);
 
   return (
     <main className="!pt-0">
@@ -122,8 +123,8 @@ const Resume = () => {
               <Summary feedback={feedback} />
 
               <ATS
-                score={feedback.ATS.score || 0}
-                suggestions={feedback.ATS.suggestions || []}
+                score={feedback.ATS?.score || 0}
+                suggestions={feedback.ATS?.suggestions || feedback.ATS?.tips || []}
               />
 
               <Details feedback={feedback} />

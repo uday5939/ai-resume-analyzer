@@ -24,7 +24,7 @@ export async function action({ request }: any) {
         {
           role: "system",
           content:
-            "You are a professional ATS resume analyzer. Return only valid JSON.",
+            "You are a professional ATS resume analyzer. Return only valid JSON. Do not return markdown. Do not use backticks.",
         },
         {
           role: "user",
@@ -36,9 +36,39 @@ If there is a lot to improve, don't hesitate to give low scores. This is to help
 If available, use the job description for the job user is applying to to give more detailed feedback.
 If provided, take the job description into consideration.
 All scores must be out of 100.
+
+The ATS section must include:
+- score: number
+- suggestions: an array of objects
+
+Each ATS suggestion must have:
+- type: "good" or "improve"
+- tip: string
+
+Example ATS format:
+{
+  "ATS": {
+    "score": 75,
+    "suggestions": [
+      {
+        "type": "good",
+        "tip": "Clean formatting with clear section headers"
+      },
+      {
+        "type": "improve",
+        "tip": "Add more relevant keywords from the job description"
+      }
+    ]
+  }
+}
+
 The job title is: ${body.jobTitle}
+
 The job description is: ${body.jobDescription}
-Provide the feedback using the following format: ${AIResponseFormat}
+
+Provide the feedback using the following format:
+${AIResponseFormat}
+
 Return the analysis as a JSON object, without any other text and without the backticks.
 Do not include any other text or comments.`,
         },
